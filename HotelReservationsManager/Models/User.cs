@@ -23,6 +23,7 @@ namespace HotelReservationsManager.Models
 
         [NotMapped]
         [Display(Name = "Confirm password")]
+        //[CompareAttribute("Password", ErrorMessage = "Password doesn't match.")]
         public string ConfirmPassword { get; set; }
 
         [Required]
@@ -63,7 +64,7 @@ namespace HotelReservationsManager.Models
 
         [Display(Name = "Dismissal date")]
         [Column(TypeName = "date")]
-        public DateTime DismissalDate { get; set; }
+        public DateTime? DismissalDate { get; set; }
 
         [NotMapped]
         [Display(Name = "Reservations list")]

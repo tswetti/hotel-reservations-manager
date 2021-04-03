@@ -59,6 +59,8 @@ namespace HotelReservationsManager.Controllers
             if (ModelState.IsValid)
             {
                 user.Password = Security.ComputeSha256Hash(user.Password);
+                user.HireDate = DateTime.Today;
+                user.Active = true;;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
