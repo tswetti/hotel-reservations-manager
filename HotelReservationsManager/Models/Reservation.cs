@@ -34,12 +34,12 @@ namespace HotelReservationsManager.Models
 
         [Required]
         [Display(Name = "Arrival date")]
-        [Column(TypeName = "date")]
+        [Column(TypeName = "datetime")]
         public DateTime ArrivalDate { get; set; }
 
         [Required]
         [Display(Name = "Departure date")]
-        [Column(TypeName = "date")]
+        [Column(TypeName = "datetime")]
         public DateTime DepartureDate { get; set; }
 
         [Required]

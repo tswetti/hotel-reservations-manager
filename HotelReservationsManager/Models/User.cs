@@ -55,7 +55,7 @@ namespace HotelReservationsManager.Models
 
         [Required]
         [Display(Name = "Hire date")]
-        [Column(TypeName = "date")]
+        [Column(TypeName = "datetime")]
         public DateTime HireDate { get; set; }
 
         [Required]
@@ -63,7 +63,7 @@ namespace HotelReservationsManager.Models
         public bool Active { get; set; }
 
         [Display(Name = "Dismissal date")]
-        [Column(TypeName = "date")]
+        [Column(TypeName = "datetime")]
         public DateTime? DismissalDate { get; set; }
 
         [NotMapped]
