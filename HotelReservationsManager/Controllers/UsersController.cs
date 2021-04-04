@@ -19,6 +19,33 @@ namespace HotelReservationsManager.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> Login()
+        {
+            ViewData["result"] = "";
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+            if (username == null || password == null)
+            {
+                ViewData["result"] = "Type username and password!";
+                return View();
+            }
+
+            string hashPass = Security.ComputeSha256Hash(password);
+            var user = await _context.Users
+                .FirstOrDefaultAsync(m => m.Username == username && m.Password == hashPass);
+            if (user == null)
+            {
+                ViewData["result"] = "Invalid username or password!";
+                return View();
+            }
+
+            return RedirectToAction("Index", "LoggedIn");
+        }
+
         // GET: Users
         public async Task<IActionResult> Index()
         {
