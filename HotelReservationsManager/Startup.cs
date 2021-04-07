@@ -27,6 +27,9 @@ namespace HotelReservationsManager
         {
             services.AddControllersWithViews();
             services.AddDbContext<ApplicationDbContext>(dbContOp => dbContOp.UseSqlServer(Configuration.GetConnectionString("HotelDBConStr")));
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +48,7 @@ namespace HotelReservationsManager
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();

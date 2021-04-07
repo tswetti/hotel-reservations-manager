@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Welcome, @ViewData["names"]!</h1>
+
+@{ int isAdmin = 0;
+    if (ViewData["admin"] == null) isAdmin = 0;
+    else isAdmin = (int)ViewData["admin"];
+    if (isAdmin == 1)
+    {
+        <a asp-action="Create" asp-controller="Users"><p>Register a new user</p></a>
+    }
+}
+
+<a asp-action="Logout" asp-controller="Main"><h2>Logout</h2></a>
+

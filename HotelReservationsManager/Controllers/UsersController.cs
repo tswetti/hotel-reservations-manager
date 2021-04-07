@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationsManager.Models;
 using HotelReservationsManager.Utilities;
+using System.Text;
 
 namespace HotelReservationsManager.Controllers
 {
@@ -42,38 +43,84 @@ namespace HotelReservationsManager.Controllers
                 ViewData["result"] = "Invalid username or password!";
                 return View();
             }
+            HttpContext.Session.Set("username", Encoding.UTF8.GetBytes(user.Username));
+            HttpContext.Session.Set("firstname", Encoding.UTF8.GetBytes(user.FirstName));
+            HttpContext.Session.Set("lastname", Encoding.UTF8.GetBytes(user.LastName));
 
-            return RedirectToAction("Index", "LoggedIn");
+            bool isAdmin = user.Admin;
+
+            if (isAdmin)
+            {
+                HttpContext.Session.Set("admin", BitConverter.GetBytes(1));
+                ViewData["admin"] = 1;
+            }
+            else
+            {
+                HttpContext.Session.Set("admin", BitConverter.GetBytes(0));
+                ViewData["admin"] = 0;
+            }
+
+            return RedirectToAction("Index", "Main");
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            byte[] bufferAdmin = new byte[200];
+            if (HttpContext.Session.TryGetValue("admin", out bufferAdmin))
+            {
+                int isAdmin = BitConverter.ToInt32(bufferAdmin);
+                if (isAdmin == 1)
+                {
+                    return View(await _context.Users.ToListAsync());
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Login", "Users");
         }
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            byte[] bufferAdmin = new byte[200];
+            if (HttpContext.Session.TryGetValue("admin", out bufferAdmin))
             {
-                return NotFound();
-            }
+                int isAdmin = BitConverter.ToInt32(bufferAdmin);
+                if (isAdmin == 1)
+                {
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+                    var user = await _context.Users
+                        .FirstOrDefaultAsync(m => m.UserId == id);
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
 
-            return View(user);
+                    return View(user);
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Login", "Users");
         }
 
         // GET: Users/Create
         public IActionResult Create()
         {
-            return View();
+            byte[] bufferAdmin = new byte[200];
+            if (HttpContext.Session.TryGetValue("admin", out bufferAdmin))
+            {
+                int isAdmin = BitConverter.ToInt32(bufferAdmin);
+                if (isAdmin==1)
+                {
+                    return View();
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Login", "Users");
         }
 
         // POST: Users/Create
@@ -87,7 +134,7 @@ namespace HotelReservationsManager.Controllers
             {
                 user.Password = Security.ComputeSha256Hash(user.Password);
                 user.HireDate = DateTime.Today;
-                user.Active = true;;
+                user.Active = true;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -98,17 +145,27 @@ namespace HotelReservationsManager.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            byte[] bufferAdmin = new byte[200];
+            if (HttpContext.Session.TryGetValue("admin", out bufferAdmin))
             {
-                return NotFound();
-            }
+                int isAdmin = BitConverter.ToInt32(bufferAdmin);
+                if (isAdmin == 1)
+                {
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
 
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
+                    var user = await _context.Users.FindAsync(id);
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
+                    return View(user);
+                }
+                return RedirectToAction("Index", "Home");
             }
-            return View(user);
+            return RedirectToAction("Login", "Users");
         }
 
         // POST: Users/Edit/5
@@ -149,19 +206,29 @@ namespace HotelReservationsManager.Controllers
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            byte[] bufferAdmin = new byte[200];
+            if (HttpContext.Session.TryGetValue("admin", out bufferAdmin))
             {
-                return NotFound();
-            }
+                int isAdmin = BitConverter.ToInt32(bufferAdmin);
+                if (isAdmin == 1)
+                {
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+                    var user = await _context.Users
+                        .FirstOrDefaultAsync(m => m.UserId == id);
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
 
-            return View(user);
+                    return View(user);
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Login", "Users");
         }
 
         // POST: Users/Delete/5
