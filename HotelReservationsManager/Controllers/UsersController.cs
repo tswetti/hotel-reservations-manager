@@ -52,13 +52,15 @@ namespace HotelReservationsManager.Controllers
             if (isAdmin)
             {
                 HttpContext.Session.Set("admin", BitConverter.GetBytes(1));
-                ViewData["admin"] = 1;
+                TempData["admin"] = true;
+
             }
             else
             {
                 HttpContext.Session.Set("admin", BitConverter.GetBytes(0));
-                ViewData["admin"] = 0;
+                TempData["admin"] = false;
             }
+            //ViewData["admin"] = "test";
 
             return RedirectToAction("Index", "Main");
         }

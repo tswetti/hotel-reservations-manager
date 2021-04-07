@@ -14,7 +14,7 @@ namespace HotelReservationsManager.Controllers
             byte[] bufferUser = new byte[200];
             byte[] bufferFName = new byte[200];
             byte[] bufferLName = new byte[200];
-            byte[] bufferAdmin = new byte[200];
+            //byte[] bufferAdmin = new byte[200];
             if (HttpContext.Session.TryGetValue("username", out bufferUser))
             {
                 HttpContext.Session.TryGetValue("firstname", out bufferFName);
@@ -31,6 +31,7 @@ namespace HotelReservationsManager.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
+            TempData["admin"] = null;
             return RedirectToAction("Index", "Home");
         }
     }

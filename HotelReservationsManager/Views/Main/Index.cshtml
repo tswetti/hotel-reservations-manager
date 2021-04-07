@@ -5,12 +5,12 @@
 
 <h1>Welcome, @ViewData["names"]!</h1>
 
-@{ int isAdmin = 0;
-    if (ViewData["admin"] == null) isAdmin = 0;
-    else isAdmin = (int)ViewData["admin"];
-    if (isAdmin == 1)
+@{
+    bool isAdmin = (bool)TempData["admin"];
+    TempData["admin"] = isAdmin;
+    if (isAdmin)
     {
-        <a asp-action="Create" asp-controller="Users"><p>Register a new user</p></a>
+        <a asp-action="Index" asp-controller="Users"><p>Register a new user @TempData["admin"]</p></a>
     }
 }
 
