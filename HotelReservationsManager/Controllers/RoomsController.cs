@@ -6,78 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationsManager.Models;
-using HotelReservationsManager.Utilities;
-using System.Text;
 
 namespace HotelReservationsManager.Controllers
 {
-    public class UsersController : Controller
+    public class RoomsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public UsersController(ApplicationDbContext context)
+        public RoomsController(ApplicationDbContext context)
         {
             _context = context;
-        }
-
-        public async Task<IActionResult> Login()
-        {
-            HttpContext.Session.Clear();
-            TempData["admin"] = null;
-            TempData["active"] = null;
-            ViewData["result"] = "";
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Login(string username, string password)
-        {
-            if (username == null || password == null)
-            {
-                ViewData["result"] = "Type username and password!";
-                return View();
-            }
-
-            string hashPass = Security.ComputeSha256Hash(password);
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Username == username && m.Password == hashPass);
-            if (user == null)
-            {
-                ViewData["result"] = "Invalid username or password!";
-                return View();
-            }
-            HttpContext.Session.Set("username", Encoding.UTF8.GetBytes(user.Username));
-            HttpContext.Session.Set("firstname", Encoding.UTF8.GetBytes(user.FirstName));
-            HttpContext.Session.Set("lastname", Encoding.UTF8.GetBytes(user.LastName));
-
-            bool isAdmin = user.Admin;
-
-            if (isAdmin)
-            {
-                HttpContext.Session.Set("admin", BitConverter.GetBytes(1));
-                TempData["admin"] = true;
-
-            }
-            else
-            {
-                HttpContext.Session.Set("admin", BitConverter.GetBytes(0));
-                TempData["admin"] = false;
-            }
-
-            bool isActive = user.Active;
-
-            if (isActive)
-            {
-                HttpContext.Session.Set("active", BitConverter.GetBytes(1));
-                TempData["active"] = true;
-            }
-            else
-            {
-                HttpContext.Session.Set("active", BitConverter.GetBytes(0));
-                TempData["active"] = false;
-            }
-
-            return RedirectToAction("Index", "Main");
         }
 
         public bool CheckActive()
@@ -86,7 +24,7 @@ namespace HotelReservationsManager.Controllers
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
                 int isActive = BitConverter.ToInt32(bufferActive);
-                if (isActive==1)
+                if (isActive == 1)
                 {
                     return true;
                 }
@@ -110,7 +48,7 @@ namespace HotelReservationsManager.Controllers
             return false;
         }
 
-        // GET: Users
+        // GET: Rooms
         public async Task<IActionResult> Index()
         {
             byte[] bufferActive = new byte[200];
@@ -118,24 +56,17 @@ namespace HotelReservationsManager.Controllers
             {
                 if (!CheckActive())
                 {
-                    return RedirectToAction("Index", "Main");
+                    return RedirectToAction("Index", "Home");
                 }
-            }
-            byte[] bufferAdmin = new byte[200];
-            if (HttpContext.Session.TryGetValue("admin", out bufferAdmin))
-            {
-                if (CheckAdmin())
-                {
-                    return View(await _context.Users.ToListAsync());
-                }
-                return RedirectToAction("Index", "Home");
+                return View(await _context.Rooms.ToListAsync());
             }
             return RedirectToAction("Login", "Users");
         }
 
-        // GET: Users/Details/5
+        // GET: Rooms/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
@@ -154,21 +85,21 @@ namespace HotelReservationsManager.Controllers
                         return NotFound();
                     }
 
-                    var user = await _context.Users
-                        .FirstOrDefaultAsync(m => m.UserId == id);
-                    if (user == null)
+                    var room = await _context.Rooms
+                        .FirstOrDefaultAsync(m => m.RoomId == id);
+                    if (room == null)
                     {
                         return NotFound();
                     }
 
-                    return View(user);
+                    return View(room);
                 }
                 return RedirectToAction("Index", "Home");
             }
             return RedirectToAction("Login", "Users");
         }
 
-        // GET: Users/Create
+        // GET: Rooms/Create
         public IActionResult Create()
         {
             byte[] bufferActive = new byte[200];
@@ -191,26 +122,23 @@ namespace HotelReservationsManager.Controllers
             return RedirectToAction("Login", "Users");
         }
 
-        // POST: Users/Create
+        // POST: Rooms/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,Username,Password,FirstName,MiddleName,LastName,EGN,Email,Admin,HireDate,Active,DismissalDate")] User user)
+        public async Task<IActionResult> Create([Bind("RoomId,Capacity,Type,Available,PriceAdults,PriceChildren,Number")] Room room)
         {
             if (ModelState.IsValid)
             {
-                user.Password = Security.ComputeSha256Hash(user.Password);
-                user.HireDate = DateTime.Today;
-                user.Active = true;
-                _context.Add(user);
+                _context.Add(room);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(room);
         }
 
-        // GET: Users/Edit/5
+        // GET: Rooms/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             byte[] bufferActive = new byte[200];
@@ -231,26 +159,26 @@ namespace HotelReservationsManager.Controllers
                         return NotFound();
                     }
 
-                    var user = await _context.Users.FindAsync(id);
-                    if (user == null)
+                    var room = await _context.Rooms.FindAsync(id);
+                    if (room == null)
                     {
                         return NotFound();
                     }
-                    return View(user);
+                    return View(room);
                 }
                 return RedirectToAction("Index", "Home");
             }
             return RedirectToAction("Login", "Users");
         }
 
-        // POST: Users/Edit/5
+        // POST: Rooms/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,Username,Password,FirstName,MiddleName,LastName,EGN,Email,Admin,HireDate,Active,DismissalDate")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("RoomId,Capacity,Type,Available,PriceAdults,PriceChildren,Number")] Room room)
         {
-            if (id != user.UserId)
+            if (id != room.RoomId)
             {
                 return NotFound();
             }
@@ -259,12 +187,12 @@ namespace HotelReservationsManager.Controllers
             {
                 try
                 {
-                    _context.Update(user);
+                    _context.Update(room);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.UserId))
+                    if (!RoomExists(room.RoomId))
                     {
                         return NotFound();
                     }
@@ -275,10 +203,10 @@ namespace HotelReservationsManager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(room);
         }
 
-        // GET: Users/Delete/5
+        // GET: Rooms/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             byte[] bufferActive = new byte[200];
@@ -299,34 +227,34 @@ namespace HotelReservationsManager.Controllers
                         return NotFound();
                     }
 
-                    var user = await _context.Users
-                        .FirstOrDefaultAsync(m => m.UserId == id);
-                    if (user == null)
+                    var room = await _context.Rooms
+                        .FirstOrDefaultAsync(m => m.RoomId == id);
+                    if (room == null)
                     {
                         return NotFound();
                     }
 
-                    return View(user);
+                    return View(room);
                 }
                 return RedirectToAction("Index", "Home");
             }
             return RedirectToAction("Login", "Users");
         }
 
-        // POST: Users/Delete/5
+        // POST: Rooms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            _context.Users.Remove(user);
+            var room = await _context.Rooms.FindAsync(id);
+            _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool RoomExists(int id)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            return _context.Rooms.Any(e => e.RoomId == id);
         }
     }
 }

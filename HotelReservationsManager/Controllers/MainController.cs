@@ -32,6 +32,7 @@ namespace HotelReservationsManager.Controllers
         {
             HttpContext.Session.Clear();
             TempData["admin"] = null;
+            TempData["active"] = null;
             return RedirectToAction("Index", "Home");
         }
     }

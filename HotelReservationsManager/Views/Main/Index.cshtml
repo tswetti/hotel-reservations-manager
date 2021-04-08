@@ -6,11 +6,20 @@
 <h1>Welcome, @ViewData["names"]!</h1>
 
 @{
-    bool isAdmin = (bool)TempData["admin"];
-    TempData["admin"] = isAdmin;
-    if (isAdmin)
+    bool isActive = (bool)TempData["active"];
+    TempData["active"] = isActive;
+    if (isActive)
     {
+        bool isAdmin = (bool)TempData["admin"];
+        TempData["admin"] = isAdmin;
+        if (isAdmin)
+        {
         <a asp-action="Index" asp-controller="Users"><p>Register a new user @TempData["admin"]</p></a>
+        }
+    }
+    else
+    {
+        <p>It seems that you are no longer hotel "RM"'s employee.</p>
     }
 }
 
