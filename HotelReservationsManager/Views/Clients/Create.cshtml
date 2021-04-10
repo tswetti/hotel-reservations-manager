@@ -37,6 +37,8 @@
                     <input class="form-check-input" asp-for="Adult" /> @Html.DisplayNameFor(model => model.Adult)
                 </label>
             </div>
+            <p class="text-danger">@TempData["email"]</p>
+            <p class="text-danger">@TempData["phonenumber"]</p>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

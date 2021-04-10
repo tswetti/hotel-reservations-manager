@@ -200,6 +200,7 @@ namespace HotelReservationsManager.Controllers
             TempData["username"] = "";
             TempData["egn"] = "";
             TempData["email"] = "";
+            TempData["dates"] = "";
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
@@ -231,17 +232,17 @@ namespace HotelReservationsManager.Controllers
             {
                 if(_context.Users.Any(u => u.Username == user.Username))
                 {
-                    TempData["username"] = "Username is taken.";
+                    TempData["username"] = "Username is taken!";
                     return View();
                 }
                 else if (_context.Users.Any(u => u.EGN == user.EGN))
                 {
-                    TempData["egn"] = "There's already an account with that egn.";
+                    TempData["egn"] = "There's already an account with that egn!";
                     return View();
                 }
                 else if (_context.Users.Any(u => u.Email == user.Email))
                 {
-                    TempData["email"] = "There's already an account with that email.";
+                    TempData["email"] = "There's already an account with that email!";
                     return View();
                 }
                 else if(user.HireDate<user.DismissalDate)
@@ -259,6 +260,10 @@ namespace HotelReservationsManager.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            TempData["username"] = "";
+            TempData["egn"] = "";
+            TempData["email"] = "";
+            TempData["dates"] = "";
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
@@ -303,6 +308,26 @@ namespace HotelReservationsManager.Controllers
 
             if (ModelState.IsValid)
             {
+                if (_context.Users.Any(u => u.Username == user.Username))
+                {
+                    TempData["username"] = "Username is taken!";
+                    return View();
+                }
+                else if (_context.Users.Any(u => u.EGN == user.EGN))
+                {
+                    TempData["egn"] = "There's already an account with that egn!";
+                    return View();
+                }
+                else if (_context.Users.Any(u => u.Email == user.Email))
+                {
+                    TempData["email"] = "There's already an account with that email!";
+                    return View();
+                }
+                else if (user.HireDate < user.DismissalDate)
+                {
+                    TempData["dates"] = "The user cannot be dismissed before getting hired!";
+                }
+                user.Password = Security.ComputeSha256Hash(user.Password);
                 try
                 {
                     _context.Update(user);

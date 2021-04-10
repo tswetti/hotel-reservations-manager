@@ -102,6 +102,7 @@ namespace HotelReservationsManager.Controllers
         // GET: Rooms/Create
         public IActionResult Create()
         {
+            TempData["room"] = "";
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
@@ -131,6 +132,11 @@ namespace HotelReservationsManager.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (_context.Rooms.Any(r => r.Number == r.Number))
+                {
+                    TempData["room"] = "A room with that number already exists!";
+                    return View();
+                }
                 _context.Add(room);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -141,6 +147,7 @@ namespace HotelReservationsManager.Controllers
         // GET: Rooms/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            TempData["room"] = "";
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
@@ -185,6 +192,11 @@ namespace HotelReservationsManager.Controllers
 
             if (ModelState.IsValid)
             {
+                if (_context.Rooms.Any(r => r.Number == r.Number))
+                {
+                    TempData["room"] = "A room with that number already exists!";
+                    return View();
+                }
                 try
                 {
                     _context.Update(room);

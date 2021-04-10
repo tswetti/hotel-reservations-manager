@@ -14,8 +14,11 @@
         TempData["admin"] = isAdmin;
         if (isAdmin)
         {
-        <a asp-action="Index" asp-controller="Users"><p>Register a new user @TempData["admin"]</p></a>
+            <a asp-action="Index" asp-controller="Users"><p>Users</p></a>
         }
+        <a asp-action="Index" asp-controller="Clients"><p>Clients</p></a>
+        <a asp-action="Index" asp-controller="Rooms"><p>Rooms</p></a>
+        <a asp-action="Index" asp-controller="Reservations"><p>Reservations</p></a>
     }
     else
     {

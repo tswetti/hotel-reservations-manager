@@ -82,6 +82,7 @@ namespace HotelReservationsManager.Controllers
         // GET: Reservations/Create
         public IActionResult Create()
         {
+            TempData["date"] = "";
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
@@ -111,6 +112,11 @@ namespace HotelReservationsManager.Controllers
             int childrenCount = 0;
             if (ModelState.IsValid)
             {
+                if (reservation.ArrivalDate<reservation.DepartureDate)
+                {
+                    TempData["resdate"] = "Departure date cannot be before arrival date!";
+                    return View();
+                }
                 foreach (Client c in reservation.Clients)
                 {
                     if (c.Adult)
@@ -136,6 +142,7 @@ namespace HotelReservationsManager.Controllers
         // GET: Reservations/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            TempData["dates"] = "";
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
@@ -174,6 +181,11 @@ namespace HotelReservationsManager.Controllers
 
             if (ModelState.IsValid)
             {
+                if (reservation.ArrivalDate < reservation.DepartureDate)
+                {
+                    TempData["resdate"] = "Departure date cannot be before arrival date!";
+                    return View();
+                }
                 try
                 {
                     _context.Update(reservation);

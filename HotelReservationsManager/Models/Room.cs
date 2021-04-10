@@ -11,9 +11,13 @@ namespace HotelReservationsManager.Models
     {
         [Required]
         [Key]
+        [RegularExpression(@"^[a-zA-Z0-9-]+$",
+            ErrorMessage = "Invalid room format!")]
         public int RoomId { get; set; }
 
         [Required]
+        [RegularExpression(@"^[0-9]$",
+            ErrorMessage = "Capacity must only consist of numbers!")]
         [Column(TypeName = "int")]
         public int Capacity { get; set; }
 

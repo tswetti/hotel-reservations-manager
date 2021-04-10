@@ -70,6 +70,8 @@ namespace HotelReservationsManager.Controllers
         // GET: Clients/Create
         public IActionResult Create()
         {
+            TempData["email"] = "";
+            TempData["phonenumber"] = "";
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
@@ -92,6 +94,16 @@ namespace HotelReservationsManager.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (_context.Clients.Any(c => c.Email == client.Email))
+                {
+                    TempData["email"] = "There's already a client with that email!";
+                    return View();
+                }
+                else if (_context.Clients.Any(c => c.PhoneNumber == client.PhoneNumber))
+                {
+                    TempData["phonenumber"] = "There's already a client with that phone number!";
+                    return View();
+                }
                 _context.Add(client);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -102,6 +114,8 @@ namespace HotelReservationsManager.Controllers
         // GET: Clients/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            TempData["email"] = "";
+            TempData["phonenumber"] = "";
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
@@ -139,6 +153,16 @@ namespace HotelReservationsManager.Controllers
 
             if (ModelState.IsValid)
             {
+                if (_context.Clients.Any(c => c.Email == client.Email))
+                {
+                    TempData["email"] = "There's already a client with that email!";
+                    return View();
+                }
+                else if (_context.Clients.Any(c => c.PhoneNumber == client.PhoneNumber))
+                {
+                    TempData["phonenumber"] = "There's already a client with that phone number!";
+                    return View();
+                }
                 try
                 {
                     _context.Update(client);
