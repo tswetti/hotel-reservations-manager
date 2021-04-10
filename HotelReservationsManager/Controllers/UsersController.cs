@@ -111,6 +111,28 @@ namespace HotelReservationsManager.Controllers
         }
 
         // GET: Users
+        public async Task<IActionResult> IndexSecond()
+        {
+            byte[] bufferActive = new byte[200];
+            if (HttpContext.Session.TryGetValue("active", out bufferActive))
+            {
+                if (!CheckActive())
+                {
+                    return RedirectToAction("Index", "Main");
+                }
+            }
+            byte[] bufferAdmin = new byte[200];
+            if (HttpContext.Session.TryGetValue("admin", out bufferAdmin))
+            {
+                if (CheckAdmin())
+                {
+                    return View(await _context.Users.ToListAsync());
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Login", "Users");
+        }
+
         public async Task<IActionResult> Index()
         {
             byte[] bufferActive = new byte[200];
@@ -126,6 +148,10 @@ namespace HotelReservationsManager.Controllers
             {
                 if (CheckAdmin())
                 {
+                    //int totalUsers = _context.Users.Count();
+                    //pageNumber = (totalUsers + pageSize - 1) / pageSize;
+                    //pageNumber = totalUsers / pageSize;
+                    //int excludeRecords = (pageSize * pageNumber) - pageSize;
                     return View(await _context.Users.ToListAsync());
                 }
                 return RedirectToAction("Index", "Home");
@@ -171,6 +197,9 @@ namespace HotelReservationsManager.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
+            TempData["username"] = "";
+            TempData["egn"] = "";
+            TempData["email"] = "";
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
@@ -200,9 +229,26 @@ namespace HotelReservationsManager.Controllers
         {
             if (ModelState.IsValid)
             {
+                if(_context.Users.Any(u => u.Username == user.Username))
+                {
+                    TempData["username"] = "Username is taken.";
+                    return View();
+                }
+                else if (_context.Users.Any(u => u.EGN == user.EGN))
+                {
+                    TempData["egn"] = "There's already an account with that egn.";
+                    return View();
+                }
+                else if (_context.Users.Any(u => u.Email == user.Email))
+                {
+                    TempData["email"] = "There's already an account with that email.";
+                    return View();
+                }
+                else if(user.HireDate<user.DismissalDate)
+                {
+                    TempData["dates"] = "The user cannot be dismissed before getting hired!";
+                }
                 user.Password = Security.ComputeSha256Hash(user.Password);
-                user.HireDate = DateTime.Today;
-                user.Active = true;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

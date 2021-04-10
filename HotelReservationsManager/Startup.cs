@@ -30,6 +30,7 @@ namespace HotelReservationsManager
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
             });
+            services.AddCloudscribePagination();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

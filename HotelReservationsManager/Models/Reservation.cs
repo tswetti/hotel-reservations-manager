@@ -34,11 +34,13 @@ namespace HotelReservationsManager.Models
 
         [Required]
         [Display(Name = "Arrival date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         [Column(TypeName = "datetime")]
         public DateTime ArrivalDate { get; set; }
 
         [Required]
         [Display(Name = "Departure date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         [Column(TypeName = "datetime")]
         public DateTime DepartureDate { get; set; }
 

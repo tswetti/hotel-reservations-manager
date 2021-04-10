@@ -1,0 +1,61 @@
+﻿@model HotelReservationsManager.Models.Reservation
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Reservation</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ReservationId" />
+            <div class="form-group">
+                <label asp-for="Room" class="control-label"></label>
+                <input asp-for="Room" class="form-control" />
+                <span asp-validation-for="Room" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArrivalDate" class="control-label"></label>
+                <input asp-for="ArrivalDate" type="date" class="form-control" />
+                <span asp-validation-for="ArrivalDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DepartureDate" class="control-label"></label>
+                <input asp-for="DepartureDate" type="date" class="form-control" />
+                <span asp-validation-for="DepartureDate" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Breakfast" /> @Html.DisplayNameFor(model => model.Breakfast)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="AllInclusive" /> @Html.DisplayNameFor(model => model.AllInclusive)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalPrice" class="control-label"></label>
+                <input asp-for="TotalPrice" class="form-control" />
+                <span asp-validation-for="TotalPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
