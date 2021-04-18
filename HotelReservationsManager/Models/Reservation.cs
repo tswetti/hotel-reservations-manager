@@ -21,10 +21,6 @@ namespace HotelReservationsManager.Models
             ErrorMessage = "Invalid room id format!")]
         public Room Room { get; set; }
 
-        /*[NotMapped]
-        [Display(Name = "Rooms list")]
-        public IList<Room> Rooms { get; set; }*/
-
         [Required]
         [Column(TypeName = "int")]
         [RegularExpression(@"^[0-9]+$",

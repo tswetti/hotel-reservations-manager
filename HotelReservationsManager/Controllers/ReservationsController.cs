@@ -101,7 +101,7 @@ namespace HotelReservationsManager.Controllers
                 }
                 ViewData["Rooms"] = new SelectList(_context.Rooms, "RoomId", "Number");
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
-                ViewData["Clients"] = new SelectList(_context.Clients, "ClientId", "FirstName" + "LastName");
+                ViewData["Clients"] = new SelectList(_context.Clients, "ClientId", "FirstName", "LastName");
                 return View();
             }
 

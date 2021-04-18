@@ -14,7 +14,6 @@ namespace HotelReservationsManager.Models
         public int ClientId { get; set; }
 
         [Required]
-        //[Range(3, 30, ErrorMessage = "The first name must be at least 3 characters and no more than 30!")]
         [RegularExpression(@"^[a-z-A-Z,.'-]+$",
             ErrorMessage = "Invalid name format!")]
         [Display(Name = "First name")]
@@ -22,7 +21,6 @@ namespace HotelReservationsManager.Models
         public string FirstName { get; set; }
 
         [Required]
-        //[Range(3, 30, ErrorMessage = "The first name must be at least 3 characters and no more than 30!")]
         [RegularExpression(@"^[a-z-A-Z,.'-]+$",
             ErrorMessage = "Invalid name format!")]
         [Display(Name = "Last name")]
