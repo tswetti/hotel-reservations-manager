@@ -15,9 +15,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Username)
             </th>
-           <!-- <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>-->
             <th>
                 @Html.DisplayNameFor(model => model.FirstName)
             </th>
@@ -49,54 +46,47 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            <!--<td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>-->
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MiddleName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EGN)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Admin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HireDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Active)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DismissalDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MiddleName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EGN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Admin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HireDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Active)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DismissalDate)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
+                </td>
+            </tr>
+           
+        }
     </tbody>
 </table>
-<cs-pager cs-paging-pagenumber="4"
-          cs-paging-totalitems="4"
-          cs-paging-pagesize="2"
-          cs-pagenumber-param="pageNumber"
-          asp-controller="Users"
-          asp-action="Index"
-          ></cs-pager>
+

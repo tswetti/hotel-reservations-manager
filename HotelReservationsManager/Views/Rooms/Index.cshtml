@@ -55,9 +55,25 @@
                 @Html.DisplayFor(modelItem => item.Number)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.RoomId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RoomId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RoomId">Delete</a>
+                @{
+                    bool isActive = (bool)TempData["active"];
+                    TempData["active"] = isActive;
+                    if (isActive)
+                    {
+                        bool isAdmin = (bool)TempData["admin"];
+                        TempData["admin"] = isAdmin;
+                        if (isAdmin)
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.RoomId">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.RoomId">Delete</a>
+                        }
+                        <a asp-action="Details" asp-route-id="@item.RoomId">Details</a>
+                    }
+                    else
+                    {
+                        <p>It seems that you are no longer hotel "RM"'s employee.</p>
+                    }
+                }
             </td>
         </tr>
 }

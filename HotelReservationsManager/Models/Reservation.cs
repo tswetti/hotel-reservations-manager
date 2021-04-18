@@ -10,19 +10,25 @@ namespace HotelReservationsManager.Models
     public class Reservation
     {
         [Required]
+        [RegularExpression(@"^[0-9]+$",
+            ErrorMessage = "Invalid id format!")]
         [Key]
         public int ReservationId { get; set; }
 
         [Required]
         [Column(TypeName = "int")]
-        public int Room { get; set; }
+        [RegularExpression(@"^[0-9]+$",
+            ErrorMessage = "Invalid room id format!")]
+        public Room Room { get; set; }
 
-        [NotMapped]
+        /*[NotMapped]
         [Display(Name = "Rooms list")]
-        public IList<Room> Rooms { get; set; }
+        public IList<Room> Rooms { get; set; }*/
 
         [Required]
         [Column(TypeName = "int")]
+        [RegularExpression(@"^[0-9]+$",
+            ErrorMessage = "Invalid user id format!")]
         public int UserId { get; set; }
 
         [NotMapped]

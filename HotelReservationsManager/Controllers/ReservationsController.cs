@@ -18,6 +18,7 @@ namespace HotelReservationsManager.Controllers
             _context = context;
         }
 
+
         public bool CheckActive()
         {
             byte[] bufferActive = new byte[200];
@@ -36,6 +37,11 @@ namespace HotelReservationsManager.Controllers
         // GET: Reservations
         public async Task<IActionResult> Index()
         {
+            ViewData["Clients"] = "";
+            ViewData["Rooms"] = "";
+            ViewData["UserId"] = "";
+            ViewData["Rooms"] = "";
+            ViewData["UserId"] = "";
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
             {
@@ -82,6 +88,9 @@ namespace HotelReservationsManager.Controllers
         // GET: Reservations/Create
         public IActionResult Create()
         {
+            ViewData["Clients"] = "";
+            ViewData["Rooms"] = "";
+            ViewData["UserId"] = "";
             TempData["date"] = "";
             byte[] bufferActive = new byte[200];
             if (HttpContext.Session.TryGetValue("active", out bufferActive))
@@ -90,10 +99,9 @@ namespace HotelReservationsManager.Controllers
                 {
                     return RedirectToAction("Index", "Main");
                 }
-                //ViewData["UserId"] = new SelectList(_context.Users, "UserId", "EGN");
                 ViewData["Rooms"] = new SelectList(_context.Rooms, "RoomId", "Number");
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
-                ViewData["Clients"] = new SelectList(_context.Clients, "ClientId", "FirstName", "LastName");
+                ViewData["Clients"] = new SelectList(_context.Clients, "ClientId", "FirstName" + "LastName");
                 return View();
             }
 
@@ -105,11 +113,13 @@ namespace HotelReservationsManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReservationId,Room,UserId,Clients,ArrivalDate,DepartureDate,Breakfast,AllInclusive,TotalPrice")] Reservation reservation)
+        public async Task<IActionResult> Create(string Clients, [Bind("ReservationId,Room,UserId,Clients,ArrivalDate,DepartureDate,Breakfast,AllInclusive,TotalPrice")] Reservation reservation)
         {
-            // reservation.Clients.AddRange(Clients);
-            int adultsCount = 0;
+            string allClients = Clients;
+            ViewData["check"] = allClients;
+            return View();
             int childrenCount = 0;
+            int adultsCount = 0;
             if (ModelState.IsValid)
             {
                 if (reservation.ArrivalDate<reservation.DepartureDate)
@@ -117,6 +127,9 @@ namespace HotelReservationsManager.Controllers
                     TempData["resdate"] = "Departure date cannot be before arrival date!";
                     return View();
                 }
+
+                
+
                 foreach (Client c in reservation.Clients)
                 {
                     if (c.Adult)

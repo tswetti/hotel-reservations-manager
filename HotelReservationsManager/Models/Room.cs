@@ -11,12 +11,12 @@ namespace HotelReservationsManager.Models
     {
         [Required]
         [Key]
-        [RegularExpression(@"^[a-zA-Z0-9-]+$",
-            ErrorMessage = "Invalid room format!")]
+        [RegularExpression(@"^[0-9]+$",
+            ErrorMessage = "Invalid id format!")]
         public int RoomId { get; set; }
 
         [Required]
-        [RegularExpression(@"^[0-9]$",
+        [RegularExpression(@"^[0-9]+$",
             ErrorMessage = "Capacity must only consist of numbers!")]
         [Column(TypeName = "int")]
         public int Capacity { get; set; }
@@ -40,6 +40,8 @@ namespace HotelReservationsManager.Models
         public decimal PriceChildren { get; set; }
 
         [Required]
+        [RegularExpression(@"^[a-zA-Z0-9-]+$",
+            ErrorMessage = "Invalid room number format!")]
         [Display(Name = "Room number")]
         [Column(TypeName = "int")]
         public int Number { get; set; }

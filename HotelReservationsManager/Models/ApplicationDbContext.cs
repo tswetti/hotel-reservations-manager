@@ -31,9 +31,8 @@ namespace HotelReservationsManager.Models
                 .UsingEntity(rc => rc.ToTable("ReservationsClients"));
 
             modelBuilder.Entity<Reservation>()
-                .HasMany(r => r.Rooms)
-                .WithMany(rm => rm.RoomReservations)
-                .UsingEntity(rr => rr.ToTable("ReservationsRooms"));
+                .HasOne(r => r.Room)
+                .WithMany(rm => rm.RoomReservations);
         }
     }
 }

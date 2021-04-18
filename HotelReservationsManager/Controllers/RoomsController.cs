@@ -11,6 +11,7 @@ namespace HotelReservationsManager.Controllers
 {
     public class RoomsController : Controller
     {
+
         private readonly ApplicationDbContext _context;
 
         public RoomsController(ApplicationDbContext context)
@@ -58,6 +59,7 @@ namespace HotelReservationsManager.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
+                
                 return View(await _context.Rooms.ToListAsync());
             }
             return RedirectToAction("Login", "Users");
@@ -132,11 +134,11 @@ namespace HotelReservationsManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_context.Rooms.Any(r => r.Number == r.Number))
+                /*if (_context.Rooms.Any(r => r.Number == r.Number))
                 {
                     TempData["room"] = "A room with that number already exists!";
                     return View();
-                }
+                }*/
                 _context.Add(room);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
